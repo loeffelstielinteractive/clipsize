@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ClipSize berechnet schnell, wie viel Speicher deine Gaming-Aufnahmen benötigen.">
+  <meta name="description" content="ClipSize schätzt, wie viel Speicher deine Gaming-Aufnahme benötigt.">
   <title>ClipSize – Gaming Recording Size Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -12,17 +12,27 @@
     <section class="hero">
       <div class="brand">CLIP<span>SIZE</span></div>
       <p class="eyebrow">GAMING RECORDING CALCULATOR</p>
-      <h1>Wie groß wird deine Aufnahme?</h1>
-      <p class="intro">Gib Bitrate und Aufnahmedauer ein und ClipSize berechnet sofort den benötigten Speicherplatz.</p>
+      <h1>Wie viel Speicher frisst dein nächster Clip?</h1>
+      <p class="intro">Wähle Auflösung, FPS und Aufnahmedauer. ClipSize schätzt die Dateigröße automatisch.</p>
     </section>
 
-    <section class="calculator" aria-label="Aufnahmegrößen-Rechner">
+    <section class="calculator" aria-label="Gaming-Aufnahmegrößen-Rechner">
       <div class="field-group">
-        <label for="bitrate">Bitrate</label>
-        <div class="input-with-unit">
-          <input id="bitrate" type="number" min="0.01" step="0.01" value="50" inputmode="decimal">
-          <span>Mbit/s</span>
-        </div>
+        <label for="resolution">Auflösung</label>
+        <select id="resolution">
+          <option value="1080">1080p – Full HD</option>
+          <option value="1440" selected>1440p – QHD</option>
+          <option value="2160">4K – Ultra HD</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="fps">Bildrate</label>
+        <select id="fps">
+          <option value="30">30 FPS</option>
+          <option value="60" selected>60 FPS</option>
+          <option value="120">120 FPS</option>
+        </select>
       </div>
 
       <div class="duration-grid">
@@ -40,18 +50,18 @@
 
       <div class="result" aria-live="polite">
         <p class="result-label">Geschätzte Dateigröße</p>
-        <output id="result-value">22,50 GB</output>
-        <p id="result-detail">1 Stunde bei 50 Mbit/s</p>
+        <output id="result-value">—</output>
+        <p id="result-detail">1440p · 60 FPS · 1 Stunde</p>
       </div>
     </section>
 
     <section class="info">
-      <h2>So funktioniert die Berechnung</h2>
-      <p>Die Dateigröße wird anhand der Bitrate und der Aufnahmedauer geschätzt. Container-, Audio- und Codec-Overhead können die tatsächliche Dateigröße leicht verändern.</p>
+      <h2>Nur eine Schätzung</h2>
+      <p>ClipSize nutzt typische Gaming-Aufnahme-Bitraten als Richtwert. Codec, Qualitätseinstellungen und Audio können die tatsächliche Dateigröße verändern.</p>
     </section>
 
     <footer>
-      <span>ClipSize V1.0</span>
+      <span>ClipSize V1.1</span>
       <span>Built for gamers.</span>
     </footer>
   </main>
