@@ -1,11 +1,19 @@
-const bitrateInput = document.getElementById('bitrate');
+const resolutionInput = document.getElementById('resolution');
+const fpsInput = document.getElementById('fps');
 const hoursInput = document.getElementById('hours');
 const minutesInput = document.getElementById('minutes');
 const calculateButton = document.getElementById('calculate');
 const resultValue = document.getElementById('result-value');
 const resultDetail = document.getElementById('result-detail');
 
-function formatNumber(value, decimals = 2) {
+// Typical gaming-recording bitrates used as a simple estimate.
+const baseBitrates = {
+  1080: 12,
+  1440: 24,
+  2160: 50
+};
+
+function formatNumber(value, decimals = 1) {
   return new Intl.NumberFormat('de-DE', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
@@ -13,23 +21,25 @@ function formatNumber(value, decimals = 2) {
 }
 
 function calculateSize() {
-  const bitrate = Number.parseFloat(bitrateInput.value);
+  const resolution = Number.parseInt(resolutionInput.value, 10);
+  const fps = Number.parseInt(fpsInput.value, 10);
   const hours = Number.parseInt(hoursInput.value, 10) || 0;
   const minutes = Number.parseInt(minutesInput.value, 10) || 0;
 
-  if (!Number.isFinite(bitrate) || bitrate <= 0 || hours < 0 || minutes < 0 || minutes > 59) {
+  if (![1080, 1440, 2160].includes(resolution) || ![30, 60, 120].includes(fps) || hours < 0 || minutes < 0 || minutes > 59) {
     resultValue.textContent = '—';
     resultDetail.textContent = 'Bitte gib gültige Werte ein.';
     return;
   }
 
   const totalSeconds = hours * 3600 + minutes * 60;
+  const baseBitrate = baseBitrates[resolution];
+  const bitrate = baseBitrate * (fps / 60);
   const totalBits = bitrate * 1_000_000 * totalSeconds;
-  const decimalGigabytes = totalBits / 8 / 1_000_000_000;
-  const binaryGibibytes = totalBits / 8 / 1_073_741_824;
+  const gigabytes = totalBits / 8 / 1_000_000_000;
 
-  resultValue.textContent = `${formatNumber(decimalGigabytes)} GB`;
-  resultDetail.textContent = `${formatDuration(hours, minutes)} bei ${formatNumber(bitrate)} Mbit/s · ${formatNumber(binaryGibibytes)} GiB`;
+  resultValue.textContent = `${formatNumber(gigabytes)} GB`;
+  resultDetail.textContent = `${resolution === 2160 ? '4K' : `${resolution}p`} · ${fps} FPS · ${formatDuration(hours, minutes)}`;
 }
 
 function formatDuration(hours, minutes) {
@@ -41,8 +51,9 @@ function formatDuration(hours, minutes) {
 
 calculateButton.addEventListener('click', calculateSize);
 
-[bitrateInput, hoursInput, minutesInput].forEach((input) => {
+[resolutionInput, fpsInput, hoursInput, minutesInput].forEach((input) => {
   input.addEventListener('input', calculateSize);
+  input.addEventListener('change', calculateSize);
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') calculateSize();
   });
